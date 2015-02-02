@@ -36,6 +36,7 @@
 	{% endfor %}
 	 <h1>Post a comment</h1>
      <p style="font-style: italic">
+    <a href="/2015/02/01/goodmorning-jekyll/#comments">read more about submitting comments</a>
      <ul>
          <li><a href="/contact/">send me an email</a></li>
          {% assign txt1 = 'Comment for article: '| url_encode %}
@@ -43,7 +44,7 @@
          {% assign txt2 = '\nhaving id: '| url_encode %}
          {% assign id = page.id| url_encode %}
          {% assign txt3 = '\n------- PLEASE LEAVE THE ABOVE UNTOUCHED AND WRITE COMMENT BELOW -------\n------- IF YOU WANT ME TO INCLUDE CREDITS ADD YOUR NAME AND MAIL -------\n\n'| url_encode %}
-         <li><a href="http://fb.binfalse.de/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">submit a comment</a> (<a href="http://3djgibyu5osi4na5.onion/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">anonymously</a>)</li>
+         <li><a href="http://fb.binfalse.de/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">submit a comment</a> through the feedback page (<a href="http://3djgibyu5osi4na5.onion/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">anonymously via TOR</a>)</li>
          <li>Fork this repo at <a href="https://github.com/binfalse/binfalse.de">GitHub</a>, add your comment to the <code>_comments</code> directory and send me a pull request</li>
      </ul>
 
