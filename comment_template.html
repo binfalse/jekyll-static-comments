@@ -8,46 +8,44 @@
 	{% endcase %}
 	{% for c in page.comments %}
 		<div class="comment {% cycle 'odd', 'even' %}">
-			<p class="comment_header">
-				From: {% if c.link and c.link != '' %}
-					<a href="{{c.link}}">{{c.name}}</a>
-				{% else %}
-					{{c.name}}
-				{% endif %}
-				<br />
+			{% assign comment_id = c.date | url_encode%}
+			<a name="comment_{{comment_id}}"></a> 
+                
+			<div class="comment_header">
+				<cite>
+					{% if c.link and c.link != '' %}
+						<a href="{{c.link}}">{{c.name}}</a>
+					{% else %}
+						{{c.name}}
+					{% endif %}
+				</cite>
+				
+				|
+				<a class="comment_permalink" href="{{site.url}}{{page.url}}#comment_{{comment_id}}" title="Permalink to this comment">Permalink</a>
+				|
 				<span class="comment_date">{{c.date}}</span>
-			</p>
-			<p>
-				{{c.comment | newline_to_br}}
-			</p>
+			</div>
+			
+			
+			<div class="comment_body">
+				{{c.comment | newline_to_br | markdownify}}
+			</div>
+			
+			
 		</div>
 	{% endfor %}
-	<h1>Post a comment</h1>
-	<p style="font-style: italic">
-		All comments are held for moderation; basic HTML formatting accepted.
-	</p>
-	<form id="commentform" method="POST" action="{{site.url}}/commentsubmit.php">
-		<input type="hidden" name="post_id" value="{{page.id}}" />
-		<input type="hidden" name="return_url" value="{{site.url}}{{page.url}}" />
-		<table>
-			<tr>
-				<th>Name:</th>
-				<td><input type="text" size="25" name="name" /> (required)</td>
-			</tr>
-			<tr>
-				<th>E-mail:</th>
-				<td><input type="text" size="25" name="email" /> (required, not published)</td>
-			</tr>
-			<tr>
-				<th>Website:</th>
-				<td><input type="text" size="25" name="link" /> (optional)</td>
-			</tr>
-			<tr>
-				<td colspan="2"><textarea name="comment" rows="10" cols="60" ></textarea></td>
-			</tr>
-			<tr>
-				<td><input type="submit" name="submit" value="Submit Comment" /></td>
-			</tr>
-		</table>
-	</form>
+	 <h1>Post a comment</h1>
+     <p style="font-style: italic">
+     <ul>
+         <li><a href="/contact/">send me an email</a></li>
+         {% assign txt1 = 'Comment for article: '| url_encode %}
+         {% assign url = page.url|remove:'index.html'| url_encode %}
+         {% assign txt2 = '\nhaving id: '| url_encode %}
+         {% assign id = page.id| url_encode %}
+         {% assign txt3 = '\n------- PLEASE LEAVE THE ABOVE UNTOUCHED AND WRITE COMMENT BELOW -------\n------- IF YOU WANT ME TO INCLUDE CREDITS ADD YOUR NAME AND MAIL -------\n\n'| url_encode %}
+         <li><a href="http://fb.binfalse.de/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">submit a comment</a> (<a href="http://3djgibyu5osi4na5.onion/?text={{txt1}}{{url}}{{txt2}}{{id}}{{txt3}}">anonymously</a>)</li>
+         <li>Fork this repo at <a href="https://github.com/binfalse/binfalse.de">GitHub</a>, add your comment to the <code>_comments</code> directory and send me a pull request</li>
+     </ul>
+
+     </p>
 </div>
