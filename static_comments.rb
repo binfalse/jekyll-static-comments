@@ -18,7 +18,7 @@
 #  You should have received a copy of the GNU General Public License along
 #  with this program; if not, see <http://www.gnu.org/licences/>
 
-class Jekyll::Post
+class Jekyll::Document
 	alias :to_liquid_without_comments :to_liquid
 	
 	def to_liquid(*args)
