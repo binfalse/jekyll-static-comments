@@ -50,23 +50,22 @@ module StaticComments
 		Dir["#{source}/**/_comments/**/*"].sort.each do |comment|
 			next unless File.file?(comment) and File.readable?(comment)
 			content = File.read(comment)
-			if content =~ /\A(---\s*\n.*?\n?)^(---\s*$\n?)/m
+			if content =~ /\A(---\s*\n.*?\n?)^(---\s*$\n?)(.*\S.*)/m
 				yaml_data = YAML.safe_load($1)
-				yaml_data["content"] = $POSTMATCH
+				yaml_data["content"] = $3
 			else
 				# It's all YAML!?
-				yaml_data = YAML.safe_load(self.content)
-				if (data.key?('comment'))
-					yaml_data["content"] = data['comment']
+				yaml_data = YAML.safe_load(content)
+				if (yaml_data.has_key?('comment'))
+					yaml_data["content"] = yaml_data['comment']
 				else
 					yaml_data["content"] = ""
-					puts "[StaticComments::Comment] WARNING: I don't know how to parse #{filename}; there doesn't seem to be any content or 'comment' property."
+					puts "[StaticComments::Comment] WARNING: I don't know how to parse #{comment}; there doesn't seem to be any content or 'comment' property."
 				end
 			end
 			post_id = yaml_data.delete('post_id')
 			comments[post_id] << yaml_data
 		end
-		
 		comments
 	end
 end
