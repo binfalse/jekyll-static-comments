@@ -25,6 +25,11 @@ class Jekyll::Document
 		data = to_liquid_without_comments(*args)
 		data['comments'] = StaticComments::find_for_post(self)
 		data['comment_count'] = data['comments'].length
+		# we need to do the following to get syntax highlighting in comments
+		payload  = self.site.site_payload
+		data['comments'].each { |x|
+		                        x["content"] = site.liquid_renderer.file(path).parse(x["content"]).render!(payload, {:filters   => [Jekyll::Filters],:registers => { :site => self.site, :page => self }})
+		                      }
 		data
 	end
 end
@@ -44,7 +49,20 @@ module StaticComments
 		
 		Dir["#{source}/**/_comments/**/*"].sort.each do |comment|
 			next unless File.file?(comment) and File.readable?(comment)
-			yaml_data = YAML::load_file(comment)
+			content = File.read(comment)
+			if content =~ /\A(---\s*\n.*?\n?)^(---\s*$\n?)/m
+				yaml_data = YAML.safe_load($1)
+				yaml_data["content"] = $POSTMATCH
+			else
+				# It's all YAML!?
+				yaml_data = YAML.safe_load(self.content)
+				if (data.key?('comment'))
+					yaml_data["content"] = data['comment']
+				else
+					yaml_data["content"] = ""
+					puts "[StaticComments::Comment] WARNING: I don't know how to parse #{filename}; there doesn't seem to be any content or 'comment' property."
+				end
+			end
 			post_id = yaml_data.delete('post_id')
 			comments[post_id] << yaml_data
 		end
